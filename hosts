@@ -8,6 +8,9 @@
 #   - You can enter hostnames or ip addresses
 #   - A hostname/ip can be a member of multiple groups
 
+[moip]
+portaldocafe.com.br
+
 # Ex 1: Ungrouped hosts, specify before any group headers.
 
 ## green.example.com

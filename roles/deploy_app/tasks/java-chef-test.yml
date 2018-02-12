@@ -1,0 +1,45 @@
+---
+- hosts: moip
+  remote_user: root
+  
+  vars:
+  - localRepo: /usr/local/src/devops-challenge
+  - warPath: /usr/local/src/devops-challenge/assets/java-chef-test.war
+  - tomcatWebapps: /usr/share/tomcat/webapps/java-chef-test 
+
+  tasks:
+  #http://docs.ansible.com/ansible/latest/git_module.html
+  #checkout a github repo and use refspec to fetch all pull requests
+  - git:
+      repo: ssh://git@github.com/moip/devops-challenge.git
+      dest: "{{ localRepo }}"
+      refspec: '+refs/pull/*:refs/heads/*'
+
+   # create a directory if it doesn't exist
+  - file:
+      path: "{{ tomcatWebapps }}"
+      state: directory
+      owner: tomcat
+      group: tomcat
+      mode: 0755
+
+  - name: "Deploy WAR file"
+    unarchive: 
+      src: "{{ warPath }}"
+      dest: "{{ tomcatWebapps }}"
+      copy: no
+      mode: 0755
+      owner: tomcat
+      group: tomcat
+    register: war_deployed  
+
+  - name: "Restart tomcat via systemctl"
+    systemd:
+      state: restarted
+      daemon_reload: yes
+      name: tomcat
+    when: war_deployed.changed
+
+#  - name: Wait until war is deployed
+#    wait_for:
+#      path: " "

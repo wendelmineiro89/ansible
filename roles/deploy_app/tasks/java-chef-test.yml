@@ -9,7 +9,7 @@
   #http://docs.ansible.com/ansible/latest/git_module.html
   #checkout a github repo and use refspec to fetch all pull requests
   - git:
-      repo: ssh://git@github.com/moip/devops-challenge.git
+      repo: ssh://git@github.com/wendelmineiro89/devops-challenge.git
       dest: "{{ localRepo }}"
       refspec: '+refs/pull/*:refs/heads/*'
 
